@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinCal Smart - Free Compound Interest &amp; Loan Calculators</title>
+  <meta name="description" content="Free, accurate, and instant financial calculators. Calculate compound interest, mortgage repayments, and plan your financial independence (FIRE).">
+  <meta name="keywords" content="compound interest calculator, mortgage calculator, loan payment calculator, FIRE calculator, financial planning tool">
+  <!-- Open Graph for Social Sharing & SEO -->
+  <meta property="og:title" content="FinCal Smart - Free Financial Calculators">
+  <meta property="og:description" content="Calculate wealth growth, loan payments, and retirement timelines in seconds.">
+  <meta property="og:type" content="website">
+
+  <!-- Tailwind CSS & Chart.js CDNs -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .ad-placeholder {
+      background: repeating-linear-gradient(45deg, #f8fafc, #f8fafc 10px, #f1f5f9 10px, #f1f5f9 20px);
+      border: 2px dashed #cbd5e1;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+
+  <!-- Navigation Bar -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-extrabold text-xl shadow-md shadow-emerald-200">
+          $
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-xl text-slate-900 tracking-tight">FinCal<span class="text-emerald-600">.</span></span>
+            <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">Smart Edition</span>
+          </div>
+          <p class="text-xs text-slate-400 font-medium">Free Personal Finance Calculators</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> 100% Free &amp; Private
+        </span>
+        <button onclick="window.print()" class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 text-slate-600 hover:bg-slate-100 transition">
+          Print / Save PDF
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- TOP AD BANNER (GOOGLE ADSENSE LEADERBOARD 728x90) -->
+  <div class="max-w-6xl mx-auto px-4 pt-5 w-full">
+    <div class="ad-placeholder rounded-xl p-4 text-center text-slate-500 text-xs">
+      <p class="font-bold text-slate-700 mb-0.5">[ GOOGLE ADSENSE LEADERBOARD BANNER - 728x90 ]</p>
+      <p class="text-slate-400 text-[11px]">When approved by Google AdSense, high-paying finance advertisements automatically render here.</p>
+    </div>
+  </div>
+
+  <!-- Main Workspace -->
+  <main class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- Left / Center: Interactive Tools Area -->
+    <div class="lg:col-span-8 space-y-6">
+
+      <!-- Navigation Tabs -->
+      <div class="bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap gap-1">
+        <button onclick="switchTab('compound')" id="tab-compound" class="tab-btn flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all bg-emerald-600 text-white shadow-sm">
+          Compound Interest
+        </button>
+        <button onclick="switchTab('loan')" id="tab-loan" class="tab-btn flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all text-slate-600 hover:bg-slate-100">
+          Loan &amp; Mortgage
+        </button>
+        <button onclick="switchTab('fire')" id="tab-fire" class="tab-btn flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all text-slate-600 hover:bg-slate-100">
+          FIRE Planner
+        </button>
+      </div>
+
+      <!-- TAB 1: COMPOUND INTEREST TOOL -->
+      <section id="section-compound" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">Compound Interest &amp; Wealth Growth</h2>
+          <p class="text-sm text-slate-500 mt-0.5">Visualize exponential asset growth powered by recurring contributions and compounding returns.</p>
+        </div>
+
+        <!-- Input Form -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Initial Investment ($)</label>
+            <input type="number" id="c-initial" value="5000" step="500" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm font-semibold">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Monthly Contribution ($)</label>
+            <input type="number" id="c-monthly" value="300" step="50" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm font-semibold">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Annual Interest Rate (%)</label>
+            <input type="number" id="c-rate" value="8.0" step="0.5" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm font-semibold">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Investment Horizon (Years)</label>
+            <input type="number" id="c-years" value="10" min="1" max="50" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm font-semibold">
+          </div>
+        </div>
+
+        <button onclick="calculateCompound()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold rounded-xl transition shadow-md shadow-emerald-200">
+          Recalculate Growth Trajectory
+        </button>
+
+        <!-- Dynamic Stat Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+            <span class="text-xs font-medium text-slate-500 block mb-1">Total Principal Invested</span>
+            <span id="c-res-principal" class="text-lg font-extrabold text-slate-800">$0</span>
+          </div>
+          <div class="bg-emerald-50/80 p-4 rounded-xl border border-emerald-200 text-center">
+            <span class="text-xs font-semibold text-emerald-700 block mb-1">Total Interest Earned</span>
+            <span id="c-res-interest" class="text-lg font-extrabold text-emerald-600">$0</span>
+          </div>
+          <div class="bg-blue-50/80 p-4 rounded-xl border border-blue-200 text-center">
+            <span class="text-xs font-semibold text-blue-700 block mb-1">Total Future Portfolio</span>
+            <span id="c-res-total" class="text-xl font-black text-blue-700">$0</span>
+          </div>
+        </div>
+
+        <!-- Chart Container -->
+        <div class="pt-2">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-sm font-bold text-slate-800">Growth Breakdown Over Time</h3>
+            <span class="text-xs text-slate-400">Values calculated annually</span>
+          </div>
+          <div class="w-full h-64 bg-slate-50/50 p-2 rounded-xl border border-slate-100">
+            <canvas id="compoundChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Yearly Breakdown Table -->
+        <div class="pt-2">
+          <h3 class="text-sm font-bold text-slate-800 mb-2">Year-by-Year Milestones</h3>
+          <div class="overflow-x-auto rounded-xl border border-slate-200 max-h-56 overflow-y-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-100 text-slate-700 font-bold sticky top-0">
+                <tr>
+                  <th class="p-2.5">Year</th>
+                  <th class="p-2.5">Total Invested</th>
+                  <th class="p-2.5">Total Interest</th>
+                  <th class="p-2.5">Ending Balance</th>
+                </tr>
+              </thead>
+              <tbody id="compound-table-body" class="divide-y divide-slate-200 bg-white">
+                <!-- Dynamically filled by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: LOAN / MORTGAGE TOOL -->
+      <section id="section-loan" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 hidden">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">Loan &amp; Mortgage Payment Estimator</h2>
+          <p class="text-sm text-slate-500 mt-0.5">Determine exact monthly installments and total financing cost based on standard amortization.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Loan Amount ($)</label>
+            <input type="number" id="l-amount" value="250000" step="10000" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm font-semibold">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Loan Term (Years)</label>
+            <input type="number" id="l-years" value="15" min="1" max="35" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm font-semibold">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Interest Rate (% / yr)</label>
+            <input type="number" id="l-rate" value="6.5" step="0.1" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm font-semibold">
+          </div>
+        </div>
+
+        <button onclick="calculateLoan()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold rounded-xl transition shadow-md shadow-emerald-200">
+          Calculate Monthly Installment
+        </button>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+          <div class="bg-amber-50/80 p-4 rounded-xl border border-amber-200 text-center">
+            <span class="text-xs font-semibold text-amber-800 block mb-1">Monthly Payment</span>
+            <span id="l-res-monthly" class="text-xl font-black text-amber-700">$0</span>
+          </div>
+          <div class="bg-rose-50/80 p-4 rounded-xl border border-rose-200 text-center">
+            <span class="text-xs font-semibold text-rose-700 block mb-1">Total Interest Paid</span>
+            <span id="l-res-interest" class="text-lg font-extrabold text-rose-600">$0</span>
+          </div>
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+            <span class="text-xs font-medium text-slate-600 block mb-1">Total Loan Cost</span>
+            <span id="l-res-total" class="text-lg font-extrabold text-slate-800">$0</span>
+          </div>
+        </div>
+
+        <!-- Quick Summary Box -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-1.5">
+          <p class="font-bold text-slate-800">Mortgage Summary Insight:</p>
+          <p id="loan-summary-text">For every $1.00 borrowed, your total repayment cost will be calculated automatically.</p>
+        </div>
+      </section>
+
+      <!-- TAB 3: FIRE PLANNER TOOL -->
+      <section id="section-fire" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 hidden">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900 tracking-tight">Financial Independence (FIRE) Planner</h2>
+          <p class="text-sm text-slate-500 mt-0.5">Determine your freedom number and timeline based on the proven Trinity Study (4% Rule).</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Monthly Living Expenses ($)</label>
+            <input type="number" id="f-expense" value="3500" step="200" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm font-semibold">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Current Portfolio ($)</label>
+            <input type="number" id="f-current" value="25000" step="5000" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm font-semibold">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Monthly Savings ($)</label>
+            <input type="number" id="f-save" value="1200" step="100" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none text-sm font-semibold">
+          </div>
+        </div>
+
+        <button onclick="calculateFIRE()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold rounded-xl transition shadow-md shadow-emerald-200">
+          Calculate Independence Date
+        </button>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+          <div class="bg-indigo-50/80 p-5 rounded-xl border border-indigo-200 text-center">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-700 block mb-1">Target FIRE Number (4% Rule)</span>
+            <span id="f-res-target" class="text-2xl font-black text-indigo-900">$0</span>
+            <span class="text-[11px] text-indigo-500 block mt-1">Sustains your lifestyle indefinitely</span>
+          </div>
+          <div class="bg-emerald-50/80 p-5 rounded-xl border border-emerald-200 text-center">
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 block mb-1">Time to Financial Freedom</span>
+            <span id="f-res-years" class="text-2xl font-black text-emerald-700">0 Years</span>
+            <span class="text-[11px] text-emerald-500 block mt-1">Assuming 7% net annual growth</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MID-PAGE CONTENT AD BANNER (336x280) -->
+      <div class="ad-placeholder rounded-2xl p-4 text-center text-slate-500 text-xs">
+        <p class="font-bold text-slate-700 mb-0.5">[ GOOGLE ADSENSE IN-ARTICLE BANNER - 336x280 / RESPONSIVE ]</p>
+        <p class="text-slate-400 text-[11px]">Contextual ad units placed between calculation workflows maximize click-through rate.</p>
+      </div>
+
+      <!-- FAQ Section (Valuable for SEO & Organic Ranking) -->
+      <section class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h3 class="text-base font-bold text-slate-900">Frequently Asked Questions</h3>
+        
+        <div class="space-y-3 text-xs text-slate-600">
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
+            <h4 class="font-bold text-slate-800 mb-1">What is Compound Interest?</h4>
+            <p>Compound interest is interest calculated on the initial principal, which also includes all of the accumulated interest from previous periods. This creates a snowball effect that accelerates wealth accumulation over time.</p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
+            <h4 class="font-bold text-slate-800 mb-1">What is the 4% Rule in Financial Independence?</h4>
+            <p>The 4% rule originated from the Trinity Study. It suggests that if you withdraw 4% of your total portfolio value in your first retirement year and adjust for inflation each subsequent year, your nest egg has a high probability of lasting at least 30 years.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- LEGAL & FINANCIAL DISCLAIMER -->
+      <div class="p-4 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-900 text-xs leading-relaxed">
+        <p class="font-bold text-amber-800 mb-1">
+          [ Legal &amp; Regulatory Disclaimer ]
+        </p>
+        <p>The tools and calculations on FinCal Smart are provided strictly for educational and informational purposes. All projections are mathematical approximations based on user inputs. They do not constitute financial, investment, accounting, or legal advice. Real-world investment returns, banking fees, and mortgage rates vary. Always consult an authorized financial advisor before executing major economic decisions.</p>
+      </div>
+
+    </div>
+
+    <!-- Right: Sidebar Area -->
+    <div class="lg:col-span-4 space-y-6">
+
+      <!-- SIDEBAR ADSENSE BANNER (300x600 Half-page) -->
+      <div class="ad-placeholder rounded-2xl p-6 text-center text-xs text-slate-500 min-h-[360px] flex flex-col justify-center items-center">
+        <p class="font-bold text-slate-700 mb-1">[ GOOGLE ADSENSE SIDEBAR BANNER ]</p>
+        <p class="text-slate-400 text-[11px] mb-2">300x250 or 300x600 Half Page Unit</p>
+        <span class="text-xs px-2 py-1 rounded bg-slate-200 text-slate-600 font-mono">Auto-Served Ads</span>
+      </div>
+
+      <!-- Financial Insight Card -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 text-xs text-slate-600 space-y-3 shadow-sm">
+        <h4 class="font-bold text-sm text-slate-800">The Power of the Rule of 72</h4>
+        <p>The Rule of 72 is a quick, useful formula to estimate the number of years required to double your money at a given annual rate of return:</p>
+        <div class="p-3 rounded-xl bg-slate-50 font-mono text-center font-bold text-slate-800 border border-slate-100">
+          Years to Double = 72 / Rate
+        </div>
+        <p class="text-slate-500 italic">Example: An 8% return doubles your investment in approximately 9 years (72 / 8 = 9).</p>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400 px-4 mt-auto">
+    <div class="max-w-4xl mx-auto space-y-1.5">
+      <p>&copy; 2026 FinCal Smart. All rights reserved. Free, open financial tools for all.</p>
+      <p class="text-[11px] text-slate-400">Independent financial utility. Not affiliated with any commercial bank or government institution.</p>
+    </div>
+  </footer>
+
+  <!-- Complete Javascript Calculation Engine -->
+  <script>
+    let chartInstance = null;
+
+    function formatUSD(amount) {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(Math.round(amount));
+    }
+
+    function switchTab(tab) {
+      ['compound', 'loan', 'fire'].forEach(t => {
+        const sec = document.getElementById('section-' + t);
+        const btn = document.getElementById('tab-' + t);
+        if (t === tab) {
+          sec.classList.remove('hidden');
+          btn.className = 'tab-btn flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all bg-emerald-600 text-white shadow-sm';
+        } else {
+          sec.classList.add('hidden');
+          btn.className = 'tab-btn flex-1 py-2.5 px-4 rounded-xl text-sm font-semibold transition-all text-slate-600 hover:bg-slate-100';
+        }
+      });
+      if (tab === 'compound') calculateCompound();
+      if (tab === 'loan') calculateLoan();
+      if (tab === 'fire') calculateFIRE();
+    }
+
+    function calculateCompound() {
+      const p = parseFloat(document.getElementById('c-initial').value) || 0;
+      const pm = parseFloat(document.getElementById('c-monthly').value) || 0;
+      const r = (parseFloat(document.getElementById('c-rate').value) || 0) / 100 / 12;
+      const years = parseInt(document.getElementById('c-years').value) || 1;
+      const totalMonths = years * 12;
+
+      let currentBalance = p;
+      let totalInvested = p;
+      const labels = [];
+      const balanceData = [];
+      const investedData = [];
+      const tableRows = [];
+
+      for (let m = 1; m <= totalMonths; m++) {
+        currentBalance = currentBalance * (1 + r) + pm;
+        totalInvested += pm;
+        if (m % 12 === 0) {
+          const yr = m / 12;
+          labels.push('Year ' + yr);
+          balanceData.push(Math.round(currentBalance));
+          investedData.push(Math.round(totalInvested));
+          tableRows.push(`<tr>
+            <td class="p-2.5 font-semibold text-slate-700">Year ${yr}</td>
+            <td class="p-2.5 text-slate-600">${formatUSD(totalInvested)}</td>
+            <td class="p-2.5 text-emerald-600 font-medium">${formatUSD(currentBalance - totalInvested)}</td>
+            <td class="p-2.5 font-bold text-slate-900">${formatUSD(currentBalance)}</td>
+          </tr>`);
+        }
+      }
+
+      document.getElementById('c-res-principal').innerText = formatUSD(totalInvested);
+      document.getElementById('c-res-interest').innerText = formatUSD(currentBalance - totalInvested);
+      document.getElementById('c-res-total').innerText = formatUSD(currentBalance);
+      document.getElementById('compound-table-body').innerHTML = tableRows.join('');
+
+      // Render chart
+      const ctx = document.getElementById('compoundChart').getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Total Balance',
+              data: balanceData,
+              borderColor: '#059669',
+              backgroundColor: 'rgba(5, 150, 105, 0.12)',
+              fill: true,
+              tension: 0.35,
+              borderWidth: 2.5
+            },
+            {
+              label: 'Principal Invested',
+              data: investedData,
+              borderColor: '#94a3b8',
+              borderDash: [4, 4],
+              fill: false,
+              borderWidth: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { intersect: false, mode: 'index' },
+          plugins: {
+            legend: { position: 'bottom', labels: { font: { size: 11, family: 'Plus Jakarta Sans' } } }
+          },
+          scales: {
+            y: { ticks: { callback: function(val) { return '$' + (val >= 1000 ? (val/1000).toFixed(0) + 'k' : val); } } }
+          }
+        }
+      });
+    }
+
+    function calculateLoan() {
+      const amount = parseFloat(document.getElementById('l-amount').value) || 0;
+      const years = parseInt(document.getElementById('l-years').value) || 1;
+      const annualRate = (parseFloat(document.getElementById('l-rate').value) || 0) / 100;
+      const monthlyRate = annualRate / 12;
+      const totalMonths = years * 12;
+
+      if (monthlyRate === 0) {
+        const monthly = amount / totalMonths;
+        document.getElementById('l-res-monthly').innerText = formatUSD(monthly);
+        document.getElementById('l-res-interest').innerText = '$0';
+        document.getElementById('l-res-total').innerText = formatUSD(amount);
+        return;
+      }
+
+      // Amortization Formula
+      const monthlyPayment = (amount * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
+      const grandTotal = monthlyPayment * totalMonths;
+      const totalInterest = grandTotal - amount;
+
+      document.getElementById('l-res-monthly').innerText = formatUSD(monthlyPayment);
+      document.getElementById('l-res-interest').innerText = formatUSD(totalInterest);
+      document.getElementById('l-res-total').innerText = formatUSD(grandTotal);
+      
+      const ratio = (grandTotal / amount).toFixed(2);
+      document.getElementById('loan-summary-text').innerText = `For every $1.00 borrowed, your total repayment cost will be $${ratio} over the full ${years}-year loan period.`;
+    }
+
+    function calculateFIRE() {
+      const expense = parseFloat(document.getElementById('f-expense').value) || 0;
+      const current = parseFloat(document.getElementById('f-current').value) || 0;
+      const saveMonthly = parseFloat(document.getElementById('f-save').value) || 0;
+
+      // 4% Rule
+      const target = expense * 12 * 25;
+      document.getElementById('f-res-target').innerText = formatUSD(target);
+
+      let balance = current;
+      let months = 0;
+      const r = 0.07 / 12;
+      while (balance < target && months < 600) {
+        balance = balance * (1 + r) + saveMonthly;
+        months++;
+      }
+      const years = (months / 12).toFixed(1);
+      document.getElementById('f-res-years').innerText = years + ' Years';
+    }
+
+    // Auto-run on boot
+    window.onload = function() {
+      calculateCompound();
+      calculateLoan();
+      calculateFIRE();
+    };
+  </script>
+</body>
+</html>
